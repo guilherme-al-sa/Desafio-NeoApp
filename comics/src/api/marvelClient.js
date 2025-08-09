@@ -1,26 +1,28 @@
 // meu client para chamar a proxy
 
-export async function fetchComics({ limit=12,offset=0,titleStartsWith} = {}) {
-  const params = new URLSearchParams({
-   limit:String(limit),
-   offset:String(offset),
+const PROXY_PREFIX =  './netlify/functions';
+
+async function callProxy(path, params = {}) {
+  const url = new URL(`${PROXY_PREFIX}/proxy-marvel`);
+  url.searchParams.set('path', path);
+  Object.entries(params).forEach(([k,v]) => {
+    if (v !== undefined && v !== null) url.searchParams.set(k, String(v));
   });
 
-  if(titleStartsWith) params.set('titleStartsWith', titleStartsWith);
+ const res = await fetch(url.toString());
+ if (!res.ok) throw new Error ('Erro na API proxy');
+ const json = await res.json();
+ return json.data;  
+//  {results,total,offset,limit}
 
-  // path=comics diz ao proxy qual endpoint chamar
-
-  const res = await fetch (`/api/proxy-marvel?path=comics&${params.toString()}`);
-  if(!res.ok) throw new Error ('Erro ao buscar comics');
-  const json = await res.json();
-
-  // json.data tem {results,total, offset, limit}
-  return json.data;
 }
 
-export async function fetchComicById(id) {
-  const res = await fetch (`/api/proxy-marvel?path=comics/${id}`)
-  if (!res.ok) throw new Error ('Erro ao buscar comic');
-  const json = await res.json();
-  return json.data;
+export function fetchComics ({limit = 12, offset = 0, titleStartWith}  = {}){
+  const params = {limit, offset};
+  if (titleStartWith) params.titleStartWith = titleStartWith;
+  return callProxy('comics',params);
+}
+
+export function fetchComicsById(id){
+  return callProxy (`comics/${id}`);
 }
