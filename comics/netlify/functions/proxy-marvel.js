@@ -32,7 +32,7 @@ exports.handler = async (event)=>{
     const data = await res.json();
     return{
      statusCode: res.status,
-     headers:{"Content-Type" : "application/json"};
+     headers:{"Content-Type" : "application/json"},
      body: JSON.stringify(data),
     };
    } catch (err){
