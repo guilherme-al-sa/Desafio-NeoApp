@@ -1,44 +1,51 @@
-const fetch = require("node-fetch");
-const crypto = require("crypto");
-const { error } = require("console");
+// netlify/functions/proxy-marvel.js
+import fetch from "node-fetch";
 
-exports.handler = async (event)=>{
- const MARVEL_PUBLIC = process.env.MARVEL_PUBLIC;
- const MARVEL_PRIVATE =process.env.MARVEL_PRIVATE;
-  if(!MARVEL_PUBLIC || !MARVEL_PRIVATE){
-   return {statusCode:500,body:JSON.stringify({error: "Missing Marvel keys"})};
-  }
+export async function handler(event) {
+  try {
+    const { path, ...params } = event.queryStringParameters;
 
-  const qs = event.queryStringParameters || {};
-  const ts = Date.now().toString();
-  const hash = crypto.createHash('md5').update(ts + MARVEL_PRIVATE + MARVEL_PUBLIC).digest('hex');
+    // 🚨 Substitua pelas suas chaves
+    const ts = Date.now().toString();
+    const publicKey = process.env.MARVEL_PUBLIC_KEY ;
+    const privateKey = process.env.MARVEL_PRIVATE_KEY;
 
-  // O path padrão 'comics' - pode receber path=characters etc.
+    if (!publicKey || !privateKey) {
+      return {
+        statusCode: 500,
+        body: JSON.stringify({ error: "Chaves da Marvel não configuradas" }),
+      };
+    }
 
-  const path = qs.path || 'comics';
-  const url = new URL (`https://gateway.marvel.com/v1/public/${path}`);
+    // Gerar o hash exigido pela API
+    const crypto = await import("crypto");
+    const hash = crypto
+      .createHash("md5")
+      .update(ts + privateKey + publicKey)
+      .digest("hex");
 
-  // repassa todos os params exceto o 'path'
+    // Construir a URL para a API oficial
+    const apiUrl = new URL(`https://gateway.marvel.com/v1/public/${path}`);
+    for (const [k, v] of Object.entries(params)) {
+      apiUrl.searchParams.set(k, v);
+    }
+    apiUrl.searchParams.set("ts", ts);
+    apiUrl.searchParams.set("apikey", publicKey);
+    apiUrl.searchParams.set("hash", hash);
 
-  Object.entries(qs).forEach(([k,v])=>{if(k !=='path')url.searchParams.append(k,v);});
-  
-  url.searchParams.append('ts',ts);
-  url.searchParams.append('apikey',MARVEL_PUBLIC);
-  url.searchParams.append('hash',hash);
+    // Fazer requisição para a Marvel
+    const response = await fetch(apiUrl.toString());
+    const data = await response.json();
 
-
-   try{
-    const res = await fetch (url.toString());
-    const data = await res.json();
-    return{
-     statusCode: res.status,
-     headers:{"Content-Type" : "application/json"},
-     body: JSON.stringify(data),
+    return {
+      statusCode: response.status,
+      body: JSON.stringify(data),
     };
-   } catch (err){
-    return {statusCode:500,body: JSON.stringify({error:err.message})};
-   }
-
-};
-
-
+  } catch (err) {
+    console.error(err);
+    return {
+      statusCode: 500,
+      body: JSON.stringify({ error: "Erro interno no proxy" }),
+    };
+  }
+}

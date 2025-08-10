@@ -18,9 +18,9 @@ async function callProxy(path, params = {}) {
 
 }
 
-export function fetchComics ({limit = 12, offset = 0, titleStartWith}  = {}){
+export function fetchComics ({limit = 12, offset = 0, titleStartsWith}  = {}){
   const params = {limit, offset};
-  if (titleStartWith) params.titleStartWith = titleStartWith;
+  if (titleStartsWith) params.titleStartsWith = titleStartsWith;
   return callProxy('comics',params);
 }
 
