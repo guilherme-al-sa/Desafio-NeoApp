@@ -1,52 +1,55 @@
 // carrinho
-import React, {createContext, useContext, useEffect, useState} from "react";
+import React, { createContext, useContext, useEffect, useState } from "react";
 
-const  CartContext = createContext();
- const [items, setItems] = useState(() =>{
-  try {
-   const raw = localStorage.getItem('cart');
-   return raw ? JSON.parse(raw) : [];
+const CartContext = createContext();
 
-  }catch {
-   return [];
-  }
- });
-
- useEffect(()=>{
-  localStorage.setItem('cart', JSON.stringify(items));
- }, [items]);
-
- function addItem(item){
-  setItems(prev =>{
-   const found = prev.find(i => i.id === item.id);
-   if(found){
-    return prev.map(i => i.id === item.id ? { ...i,qty: i.qty + 1} :i);
-   }
-   return [...prev, { ...item,qty: 1}];
+// Componente Provider que envolve toda a lógica
+export const CartProvider = ({ children }) => {
+  const [items, setItems] = useState(() => {
+    try {
+      const raw = localStorage.getItem('cart');
+      return raw ? JSON.parse(raw) : [];
+    } catch {
+      return [];
+    }
   });
- }
 
- function removeItem(id){
-  setItems(prev => prev.filter(i => i.id !== id));
+  useEffect(() => {
+    localStorage.setItem('cart', JSON.stringify(items));
+  }, [items]);
 
- }
+  function addItem(item) {
+    setItems(prev => {
+      const found = prev.find(i => i.id === item.id);
+      if (found) {
+        return prev.map(i => i.id === item.id ? { ...i, qty: i.qty + 1 } : i);
+      }
+      return [...prev, { ...item, qty: 1 }];
+    });
+  }
 
- function updateQty(id,qty){
-  setItems(prev => prev.map(i => i.id === id ? { ...i,qty} :i));
- }
+  function removeItem(id) {
+    setItems(prev => prev.filter(i => i.id !== id));
+  }
 
- function clearCart(){
-  setItems([]);
- }
+  function updateQty(id, qty) {
+    setItems(prev => prev.map(i => i.id === id ? { ...i, qty } : i));
+  }
 
- const total = items.reduce((s,i) => s + (i.price || 0 ) * (i.qty || 1),0);
+  function clearCart() {
+    setItems([]);
+  }
 
- return (
+  const total = items.reduce((s, i) => s + (i.price || 0) * (i.qty || 1), 0);
+
+  return (
     <CartContext.Provider value={{ items, addItem, removeItem, updateQty, clearCart, total }}>
       {children}
     </CartContext.Provider>
   );
+};
 
-  export function useCart(){
-   return useContext(CartContext);
-  }
+// Hook personalizado para usar o contexto
+export function useCart() {
+  return useContext(CartContext);
+}
