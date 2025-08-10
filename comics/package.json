@@ -10,6 +10,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "crypto-js": "^4.2.0",
     "md5": "^2.3.0",
     "node-fetch": "^2.7.0",
     "react": "^19.1.1",

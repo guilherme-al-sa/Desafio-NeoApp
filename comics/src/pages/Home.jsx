@@ -6,7 +6,7 @@ import {useNavigate} from 'react-router-dom';
 import { useCart } from "../context/CartProvider";
 
 export default function Home() {
- const LIMIT = 12;
+ const LIMIT = 3;
  const [page, setPage] = useState(0);
  const [data, setData] = useState({ results: [], total: 0, offset: 0, limit: LIMIT });
  const [loading, setLoading] = useState(false);
