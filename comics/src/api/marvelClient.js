@@ -3,7 +3,8 @@
 const PROXY_PREFIX =  './netlify/functions';
 
 async function callProxy(path, params = {}) {
-  const url = new URL(`${PROXY_PREFIX}/proxy-marvel`);
+  // const url = new URL(`${PROXY_PREFIX}/proxy-marvel`);
+  const url = new URL(`${PROXY_PREFIX}/proxy-marvel`, window.location.origin);
   url.searchParams.set('path', path);
   Object.entries(params).forEach(([k,v]) => {
     if (v !== undefined && v !== null) url.searchParams.set(k, String(v));
