@@ -201,7 +201,7 @@ export default function Home() {
           marginBottom: '1rem',
           fontSize: '0.9rem'
         }}>
-          🔍 Buscando por: <strong>"{searchTerm}"</strong> 
+          Buscando por: <strong>"{searchTerm}"</strong> 
           {data.total > 0 && ` • ${data.total} resultado(s) encontrado(s)`}
         </div>
       )}
@@ -242,7 +242,7 @@ export default function Home() {
           background: '#f8f9fa',
           borderRadius: '8px'
         }}>
-          <h3>🔍 Nenhum comic encontrado</h3>
+          <h3>Nenhum comic encontrado</h3>
           <p>
             {searchTerm 
               ? `Não encontramos comics com "${searchTerm}". Tente outro termo!`
