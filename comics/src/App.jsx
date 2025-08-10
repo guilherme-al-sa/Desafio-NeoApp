@@ -1,7 +1,7 @@
 import React from "react";
 import {BrowserRouter, Routes, Route, Link} from 'react-router-dom';
 import Home from './pages/Home';
-import comicDetail from "./pages/ComicDetail";
+import ComicDetail from "./pages/ComicDetail";
 import {CartProvider, useCart} from './context/CartProvider';
 
 function CartButton(){
@@ -52,7 +52,7 @@ export default function App(){
 
         <Routes>
           <Route path="/" element={<Home />} />
-          <Route path="/comics/:id" element={<ComicDetail />} />
+          <Route path="/comics/:id" element={<ComicDetail/>} />
           <Route path="/cart" element={<CartPage />} />
         </Routes>
       </BrowserRouter>

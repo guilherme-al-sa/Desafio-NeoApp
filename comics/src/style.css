@@ -8,12 +8,56 @@
  --radius:12px;
 }
 
-*{box-sizing: border-box;}
-html,body,#root{height: 100%;}
+*{
+ box-sizing: border-box;
+}
+html,body,#root{
+ height: 100%;
+
+}
+
 body{
  margin: 0;
  font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
  background: var(--bg);
  color: var(--text);
- 
+
+}
+
+.site-header{
+ display: flex;
+ justify-content: space-between;
+ align-items: center;
+ padding: 1rem;
+ background: linear-gradient(90deg,#fff,#f2f6ff);
+ box-shadow: 0 2px 6px rgba(20, 20, 50, 0.04);
+}
+
+.container{
+ max-width: 1100px;
+ margin: 1rem auto;
+ padding: 0 1rem;
+}
+
+.topbar h1{
+ margin: 0;
+ padding: 0;
+}
+
+.grid{
+ display: grid;
+ grid-template-columns: repeat(2,1fr);
+ gap: var(--gap);
+}
+
+/* card */
+
+.comic-card{
+ background: var(--card);
+ border-radius: var(--radius);
+ padding: 0.75rem;
+ box-shadow: 0 6px 14px rgba(20, 20, 50, 0.06);
+ display: flex;
+ flex-direction: column;
+ align-items: center;
 }
