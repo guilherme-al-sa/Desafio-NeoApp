@@ -1,4 +1,4 @@
-// src/api/mockMarvelClient.js
+
 // Cliente mockado com dados realistas da Marvel
 
 const mockComicsDatabase = [
@@ -79,7 +79,7 @@ const mockComicsDatabase = [
     title: "Thor: Ragnarok",
     description: "O crepúsculo dos deuses chegou a Asgard! Thor deve salvar seu reino da destruição.",
     thumbnail: {
-      path: "https://m.media-amazon.com/images/I/41x6cmvy2sL._SY445_SX342_.jpg",
+      path: "https://m.media-amazon.com/images/I/51bnVGusL-L._SY445_SX342_.jpg",
       extension: "jpg"
     },
     prices: [{ price: 22.99 }],
@@ -220,7 +220,7 @@ const mockComicsDatabase = [
   }
 ];
 
-// Resto do código permanece igual...
+
 class MockMarvelClient {
   constructor() {
     this.database = mockComicsDatabase;
