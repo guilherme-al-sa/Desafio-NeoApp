@@ -1,27 +1,27 @@
 :root{
  /* cores primarias */
- --primary:
- --primary-dark:
- --secondary:
---accent:
---sucess:
---warning: 
---danger: 
+ --primary:#e50914;
+ --primary-dark:#b8070f;
+ --secondary:#1976d2;
+--accent:#ff6b35;
+--sucess:#28a745;
+--warning: #ffc107;
+--danger: #dc3545;
 
 
 /* cores segundarias */
 
---bg-primary: 
---bg-secondary: 
---bg-tertiary: 
---surface: 
---surface-hover: 
+--bg-primary: #0d1117;
+--bg-secondary: #161b22;
+--bg-tertiary: #21262d;
+--surface: #30363d;
+--surface-hover: #40464d;
 
 /* meus textos */
 
---text-primary:
---text-secondary: 
---text-muted: 
+--text-primary:#f0f6fc;
+--text-secondary: #8b949e;
+--text-muted: #6e7681;
 
 
 }
