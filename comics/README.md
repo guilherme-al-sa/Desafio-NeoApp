@@ -11,3 +11,7 @@ Após conseguir acessar a API atraves de outra chave, todo o codigo foi adaptado
 da API.
 
 
+-Para conseguir rodar o projeto é preciso acessar o diretório dar o comando.
+ cd comics 
+ netlify  dev
+  
