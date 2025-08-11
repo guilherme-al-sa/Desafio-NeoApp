@@ -15,4 +15,6 @@ da API.
  cd comics 
  netlify  dev
   
-  
+ ATENÇÃO
+ - O sistema não ira puxar as imagens das HQs pois não está com as chaves
+ - Para isso coloque a chave nos campos Private e Public Key para rodar
