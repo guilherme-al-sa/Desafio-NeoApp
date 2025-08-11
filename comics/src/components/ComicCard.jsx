@@ -1,7 +1,7 @@
 import React from "react";
 
 export default function ComicCard({ comic, onOpen, onAdd }) {
-  
+ 
   if (!comic.thumbnail) {
     console.warn('Comic sem thumbnail:', comic);
     return null;
@@ -20,7 +20,7 @@ export default function ComicCard({ comic, onOpen, onAdd }) {
         src={thumb} 
         alt={comic.title}
         onError={(e) => {
-          e.target.src = '/placeholder-comic.png'; /
+          e.target.src = '/placeholder-comic.png'; 
         }}
       />
       <h3 className="comic-title">{comic.title}</h3>
