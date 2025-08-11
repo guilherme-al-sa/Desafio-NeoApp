@@ -1,7 +1,7 @@
 import React from "react";
 
 export default function ComicCard({ comic, onOpen, onAdd }) {
-  // Verificar se thumbnail existe
+  
   if (!comic.thumbnail) {
     console.warn('Comic sem thumbnail:', comic);
     return null;
@@ -9,7 +9,7 @@ export default function ComicCard({ comic, onOpen, onAdd }) {
 
   const thumb = `${comic.thumbnail.path}/portrait_uncanny.${comic.thumbnail.extension}`;
   
-  // Corrigir a obtenção do preço
+  
   const price = comic.prices && comic.prices.length > 0 && comic.prices[0].price 
     ? comic.prices[0].price 
     : 0;
@@ -20,7 +20,7 @@ export default function ComicCard({ comic, onOpen, onAdd }) {
         src={thumb} 
         alt={comic.title}
         onError={(e) => {
-          e.target.src = '/placeholder-comic.png'; // Imagem de fallback
+          e.target.src = '/placeholder-comic.png'; /
         }}
       />
       <h3 className="comic-title">{comic.title}</h3>

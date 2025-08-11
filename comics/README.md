@@ -6,3 +6,8 @@ Os dados estão formatados  de forma com que simule uma alimentação real da AP
 
 O Css foi definido a partir disso, de forma com que a paleta de cores tenha destaque e contraste e que remeta ao unicervo de  HQs.
 
+
+Após conseguir acessar a API atraves de outra chave, todo o codigo foi adaptado para conseguir ser alimentado pelos dados
+da API.
+
+

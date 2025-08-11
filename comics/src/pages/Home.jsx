@@ -1,122 +1,62 @@
-// import React, { useEffect, useState } from "react";
-// import { fetchComics } from "../api/marvelClient";
-// import ComicCard from "../components/ComicCard";
-// import Pagination from "../components/Pagination";
-// import {useNavigate} from 'react-router-dom';
-// import { useCart } from "../context/CartProvider";
-
-// export default function Home() {
-//  const LIMIT = 3;
-//  const [page, setPage] = useState(0);
-//  const [data, setData] = useState({ results: [], total: 0, offset: 0, limit: LIMIT });
-//  const [loading, setLoading] = useState(false);
-//  const navigate = useNavigate();
-//  const {addItem} = useCart();
-
-//  useEffect(() => {
-//   setLoading(true);
-//   const offset = page * LIMIT;
-//   fetchComics({ limit: LIMIT, offset })
-//    .then(d => setData(d))
-//    .catch(err => console.error(err))
-//    .finally(() => setLoading(false));
-
-//  }, [page]);
-
-//  const totalPages = Math.ceil((data.total || 0) / LIMIT);
-
-//  return (
-//   <main className="container">
-//     <header className="topbar">
-//    <h1>Loja de quadrinhos</h1>
-//    </header>
-//    {loading ? <p>Carregando...</p> : (
-//       <>
-//           <div className="grid">
-//             {data.results.map(c => (
-//               <ComicCard key={c.id} comic={c} onOpen={(id)=>navigate(`/comics/${id}`)} onAdd={(item)=>addItem(item)} />
-//             ))}
-//           </div>
-//           <Pagination page={page} totalPages={totalPages} onChange={p => setPage(Math.max(0, p))} />
-//         </>
-//       )}
-//     </main>
-//  );
-// }
-
-// dados mockados
-
+import {getComicsData} from "../api/marvelClient"
 import React, { useEffect, useState } from "react";
 import { useNavigate } from 'react-router-dom';
 import { useCart } from "../context/CartProvider";
-
-// Importar cliente mockado
-import { fetchComics, getStats } from "../api/mockMarvelClient";
 import ComicCard from "../components/ComicCard";
 import Pagination from "../components/Pagination";
 
 export default function Home() {
-  const LIMIT = 6; // Mostrar 6 comics por página
+  const LIMIT = 6; 
   const [page, setPage] = useState(0);
   const [data, setData] = useState({ results: [], total: 0, offset: 0, limit: LIMIT });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
-  const [stats, setStats] = useState(null);
   const navigate = useNavigate();
   const { addItem } = useCart();
 
-  // Carregar estatísticas na inicialização
-  useEffect(() => {
-    const statsData = getStats();
-    setStats(statsData);
-    console.log('Estatísticas dos dados mockados:', statsData);
-  }, []);
+  
 
-  // Carregar comics quando página ou termo de busca mudam
-  useEffect(() => {
-    setLoading(true);
-    setError(null);
-    
-    const offset = page * LIMIT;
-    const searchParams = { limit: LIMIT, offset };
-    
-    // Adicionar filtro de busca se houver termo
-    if (searchTerm.trim()) {
-      searchParams.titleStartsWith = searchTerm.trim();
-    }
+ useEffect(() => {
+  setLoading(true);
+  setError(null);
 
-    console.log('Carregando comics com parâmetros:', searchParams);
+  const offset = page * LIMIT;
+  const searchParams = { limit: LIMIT, offset };
 
-    fetchComics(searchParams)
-      .then(responseData => {
-        console.log('Comics carregados:', responseData);
-        setData(responseData);
-      })
-      .catch(err => {
-        console.error("Erro ao carregar comics:", err);
-        setError(err.message);
-      })
-      .finally(() => {
-        setLoading(false);
-      });
+  if (searchTerm.trim()) {
+    searchParams.titleStartsWith = searchTerm.trim();
+  }
 
-  }, [page, searchTerm]);
+  getComicsData(searchParams)
+    .then(response => {
+      setData(response);
+      console.log("Conteúdo do data:", response); 
+    })
+    .catch(err => {
+      setError("Não foi possível carregar os dados da API da Marvel.");
+      console.error(err);
+    })
+    .finally(() => {
+      setLoading(false);
+    });
 
-  // Resetar página quando buscar
+}, [page, searchTerm]);
+
+  
   const handleSearch = (e) => {
     e.preventDefault();
-    setPage(0); // Voltar para primeira página
+    setPage(0); 
   };
 
   const totalPages = Math.ceil((data.total || 0) / LIMIT);
 
-  // Função para adicionar ao carrinho com feedback
+  
   const handleAddToCart = (item) => {
     addItem(item);
     console.log('Item adicionado ao carrinho:', item.title);
     
-    // Feedback visual simples
+    
     const button = document.activeElement;
     const originalText = button.textContent;
     button.textContent = 'Adicionado!';
@@ -133,23 +73,7 @@ export default function Home() {
       <header className="topbar">
         <h1>Marvel Comics Store</h1>
         
-        {/* Badge indicando uso de dados mockados */}
-        <div style={{
-          background: '#e3f2fd',
-          border: '1px solid #2196f3',
-          borderRadius: '8px',
-          padding: '0.5rem 1rem',
-          margin: '1rem 0',
-          fontSize: '0.9rem',
-          color: '#1565c0'
-        }}>
-          <strong>Modo Demonstração</strong> - Usando dados de exemplo
-          {stats && (
-            <span style={{ marginLeft: '1rem', fontSize: '0.8rem' }}>
-              ({stats.totalComics} comics • {stats.uniqueSeries} séries • Preço médio: R$ {stats.averagePrice})
-            </span>
-          )}
-        </div>
+        
 
         {/* Barra de busca */}
         <form onSubmit={handleSearch} style={{ 
@@ -269,8 +193,7 @@ export default function Home() {
           }}>
             {data.results.map(comic => (
               <ComicCard 
-                key={comic.id} 
-                comic={comic} 
+              key={comic.id} comic={comic} 
                 onOpen={(id) => navigate(`/comics/${id}`)} 
                 onAdd={handleAddToCart}
               />

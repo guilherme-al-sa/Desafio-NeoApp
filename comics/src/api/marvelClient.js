@@ -5,43 +5,51 @@ const PROXY_PREFIX = process.env.NODE_ENV === 'development'
   : '/.netlify/functions';
 
 
+export const publicKey = "Public key";
 const privateKey = "Private Key";
-const publicKey = "Public Key";
 
-const generateHash = (timeStamp) => {
-  return md5(timeStamp + "Private Key" + "Public Key");
+const generateHash = (timestamp) => {
+  return md5(timestamp + "Private Key" + "Public key");
 };
 
+const handleSubmit = (event) => {
+  event.preventDefault();
+  getComicsData();
+};
 
-async function callProxy(path, params = {}) {
-  const timeStamp = new Date().getTime();
-  const hash = generateHash(timeStamp);
+export async function getComicsData({ limit = 6, offset = 0, titleStartsWith = "" } = {}) {
+  const ts = Date.now();
+  const hash = md5(ts + privateKey + publicKey);
 
+  let url = `https://gateway.marvel.com/v1/public/comics?limit=${limit}&offset=${offset}&ts=${ts}&apikey=${publicKey}&hash=${hash}`;
 
-  const url = `https://gateway.marvel.com:443/v1/public/comics?apikey=${publicKey}&hash=${hash}&ts=${timeStamp}`;
+  if (titleStartsWith) {
+    url += `&titleStartsWith=${encodeURIComponent(titleStartsWith)}`;
+  }
 
-  console.log("vai fazer a requisição")
-  fetch(url)
-    .then((response) => response.json())
-    .then((result) => {
+  const res = await fetch(url);
+  if (!res.ok) throw new Error(`Erro HTTP: ${res.status}`);
 
-      console.log("FUNCIONOOO: ", result);
-    })
-    .catch(() => {
-      console.log("error while getting character data");
-    });
-  console.log("Funciono")
+  const json = await res.json();
+  return {
+    results: json.data.results,
+    total: json.data.total,
+    offset: json.data.offset,
+    limit: json.data.limit
+  };
 }
 
-export function fetchComics({ limit = 12, offset = 0, titleStartsWith } = {}) {
+export async function getComicById(id) {
+  const ts = Date.now();
+  const hash = md5(ts + privateKey + publicKey);
 
-  console.log("chegou")
-  const params = { limit, offset };
-  if (titleStartsWith) params.titleStartsWith = titleStartsWith;
-  return callProxy('comics', params);
+  const url = `https://gateway.marvel.com/v1/public/comics/${id}?ts=${ts}&apikey=${publicKey}&hash=${hash}`;
+
+  const res = await fetch(url);
+  if (!res.ok) throw new Error(`Erro HTTP: ${res.status}`);
+
+  const json = await res.json();
+  
+  return json.data.results[0];
 }
 
-export function fetchComicById(id) {
-  console.log("chegiou aqui 2")
-  return callProxy(`comics/${id}`);
-}

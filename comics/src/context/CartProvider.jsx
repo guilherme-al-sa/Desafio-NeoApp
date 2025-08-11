@@ -3,7 +3,7 @@ import React, { createContext, useContext, useEffect, useState } from "react";
 
 const CartContext = createContext();
 
-// Componente Provider que envolve toda a lógica
+
 export const CartProvider = ({ children }) => {
   const [items, setItems] = useState(() => {
     try {
@@ -49,7 +49,7 @@ export const CartProvider = ({ children }) => {
   );
 };
 
-// Hook personalizado para usar o contexto
+
 export function useCart() {
   return useContext(CartContext);
 }
