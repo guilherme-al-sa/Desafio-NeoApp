@@ -5,11 +5,11 @@ const PROXY_PREFIX = process.env.NODE_ENV === 'development'
   : '/.netlify/functions';
 
 
-export const publicKey = "e34409617668f5c83119a972696fc299";
-const privateKey = "af0862f2f2990fbe576eb4a89469980bb5165159";
+export const publicKey = "Public key";
+const privateKey = "Private key";
 
 const generateHash = (timestamp) => {
-  return md5(timestamp + "af0862f2f2990fbe576eb4a89469980bb5165159" + "e34409617668f5c83119a972696fc299");
+  return md5(timestamp + "Private key" + "Public key");
 };
 
 const handleSubmit = (event) => {
